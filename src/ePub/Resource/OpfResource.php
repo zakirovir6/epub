@@ -76,13 +76,19 @@ class OpfResource
 
         // Epub version:
         $package->version = (string) $xml['version'];
-        
-        $this->processMetadataElement($xml->metadata, $package->metadata);
-        $this->processManifestElement($xml->manifest, $package->manifest);
-        $this->processSpineElement($xml->spine, $package->spine, $package->manifest, $package->navigation);
+        $xml->registerXPathNamespace( 'opf', 'http://www.idpf.org/2007/opf' );
 
-        if ($xml->guide) {
-            $this->processGuideElement($xml->guide, $package->guide);
+        $metadatas = $xml->xpath('//opf:metadata');
+        $manifests = $xml->xpath('//opf:manifest');
+        $spines = $xml->xpath('//opf:spine');
+        $guides = $xml->xpath('//opf:guide');
+        
+        $this->processMetadataElement(reset($metadatas), $package->metadata);
+        $this->processManifestElement(reset($manifests), $package->manifest);
+        $this->processSpineElement(reset($spines), $package->spine, $package->manifest, $package->navigation);
+
+        if (count($guides)) {
+            $this->processGuideElement(reset($guides), $package->guide);
         }
 
         return $package;
