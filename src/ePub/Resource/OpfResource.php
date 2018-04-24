@@ -114,6 +114,7 @@ class OpfResource
 
             $item->id       = (string) $child['id'];
             $item->href     = (string) $child['href'];
+            $item->href     = \urldecode($item->href);
             $item->type     = (string) $child['media-type'];
             $item->fallback = (string) $child['fallback'];
 
